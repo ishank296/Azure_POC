@@ -1,0 +1,296 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf001payasgo"
+		},
+		"input_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'input_blob'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/input_blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('input_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/superstore_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "input_blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "superstore_data.csv",
+						"folderPath": "superstore_market_campaign_ds",
+						"container": "contadf0001"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Id",
+						"type": "String"
+					},
+					{
+						"name": "Year_Birth",
+						"type": "String"
+					},
+					{
+						"name": "Education",
+						"type": "String"
+					},
+					{
+						"name": "Marital_Status",
+						"type": "String"
+					},
+					{
+						"name": "Income",
+						"type": "String"
+					},
+					{
+						"name": "Kidhome",
+						"type": "String"
+					},
+					{
+						"name": "Teenhome",
+						"type": "String"
+					},
+					{
+						"name": "Dt_Customer",
+						"type": "String"
+					},
+					{
+						"name": "Recency",
+						"type": "String"
+					},
+					{
+						"name": "MntWines",
+						"type": "String"
+					},
+					{
+						"name": "MntFruits",
+						"type": "String"
+					},
+					{
+						"name": "MntMeatProducts",
+						"type": "String"
+					},
+					{
+						"name": "MntFishProducts",
+						"type": "String"
+					},
+					{
+						"name": "MntSweetProducts",
+						"type": "String"
+					},
+					{
+						"name": "MntGoldProds",
+						"type": "String"
+					},
+					{
+						"name": "NumDealsPurchases",
+						"type": "String"
+					},
+					{
+						"name": "NumWebPurchases",
+						"type": "String"
+					},
+					{
+						"name": "NumCatalogPurchases",
+						"type": "String"
+					},
+					{
+						"name": "NumStorePurchases",
+						"type": "String"
+					},
+					{
+						"name": "NumWebVisitsMonth",
+						"type": "String"
+					},
+					{
+						"name": "Response",
+						"type": "String"
+					},
+					{
+						"name": "Complain",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/input_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/superstore_parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "input_blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "superstore.parquet",
+						"folderPath": "output/superstore_parquet",
+						"container": "contadf0001"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/input_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_superstore')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "superstore_csv",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "superstore_parquet",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Id as string,",
+						"          Year_Birth as string,",
+						"          Education as string,",
+						"          Marital_Status as string,",
+						"          Income as double,",
+						"          Kidhome as integer,",
+						"          Teenhome as integer,",
+						"          Dt_Customer as string,",
+						"          Recency as integer,",
+						"          MntWines as integer,",
+						"          MntFruits as integer,",
+						"          MntMeatProducts as integer,",
+						"          MntFishProducts as integer,",
+						"          MntSweetProducts as integer,",
+						"          MntGoldProds as integer,",
+						"          NumDealsPurchases as integer,",
+						"          NumWebPurchases as integer,",
+						"          NumCatalogPurchases as integer,",
+						"          NumStorePurchases as integer,",
+						"          NumWebVisitsMonth as integer,",
+						"          Response as integer,",
+						"          Complain as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 derive(Dt_Customer = iif(isDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM-dd-YYYY'))) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/superstore_csv')]",
+				"[concat(variables('factoryId'), '/datasets/superstore_parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv2parquet')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_superstore",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow_superstore')]"
+			]
+		}
+	]
+}
