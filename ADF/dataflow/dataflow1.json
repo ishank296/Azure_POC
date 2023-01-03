@@ -12,7 +12,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "superstore_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -46,7 +54,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(Dt_Customer = iif(isDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM-dd-YYYY'))) ~> derivedColumn1"
+				"source1 derive(Dt_Customer = iif(isDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM-dd-YYYY'))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
