@@ -1,0 +1,48 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "supermarket_csv",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          Id as string,",
+				"          Year_Birth as string,",
+				"          Education as string,",
+				"          Marital_Status as string,",
+				"          Income as double,",
+				"          Kidhome as integer,",
+				"          Teenhome as integer,",
+				"          Dt_Customer as string,",
+				"          Recency as integer,",
+				"          MntWines as integer,",
+				"          MntFruits as integer,",
+				"          MntMeatProducts as integer,",
+				"          MntFishProducts as integer,",
+				"          MntSweetProducts as integer,",
+				"          MntGoldProds as integer,",
+				"          NumDealsPurchases as integer,",
+				"          NumWebPurchases as integer,",
+				"          NumCatalogPurchases as integer,",
+				"          NumStorePurchases as integer,",
+				"          NumWebVisitsMonth as integer,",
+				"          Response as integer,",
+				"          Complain as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1"
+			]
+		}
+	}
+}
