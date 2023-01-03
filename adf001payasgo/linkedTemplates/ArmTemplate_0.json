@@ -252,7 +252,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Data flow1",
+						"name": "Data flow superstore",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
