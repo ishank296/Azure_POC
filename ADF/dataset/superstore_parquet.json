@@ -1,0 +1,21 @@
+{
+	"name": "superstore_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "input_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "superstore.parquet",
+				"folderPath": "output/superstore_parquet",
+				"container": "contadf0001"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
