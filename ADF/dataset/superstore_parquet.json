@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "superstore.parquet",
+				"fileName": "part-00000-37bbb07e-31bf-4210-b9d5-0a693fa5ec85-c000.snappy.parquet",
 				"folderPath": "output/superstore_parquet",
 				"container": "contadf0001"
 			},
