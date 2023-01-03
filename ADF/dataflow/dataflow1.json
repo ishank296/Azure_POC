@@ -13,7 +13,11 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          Id as string,",
@@ -23,7 +27,7 @@
 				"          Income as double,",
 				"          Kidhome as integer,",
 				"          Teenhome as integer,",
-				"          Dt_Customer as string,",
+				"          Dt_Customer as date,",
 				"          Recency as integer,",
 				"          MntWines as integer,",
 				"          MntFruits as integer,",
@@ -41,7 +45,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1"
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(Dt_Customer = iif(isDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM/dd/YYYY'),toDate(Dt_Customer,'MM-dd-YYYY'))) ~> derivedColumn1"
 			]
 		}
 	}
