@@ -1,12 +1,12 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow_superstore",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "supermarket_csv",
+						"referenceName": "superstore_csv",
 						"type": "DatasetReference"
 					},
 					"name": "source1"

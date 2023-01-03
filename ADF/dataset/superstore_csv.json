@@ -1,5 +1,5 @@
 {
-	"name": "supermarket_csv",
+	"name": "superstore_csv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "input_blob",
