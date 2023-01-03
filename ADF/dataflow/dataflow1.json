@@ -35,7 +35,7 @@
 				"          Income as double,",
 				"          Kidhome as integer,",
 				"          Teenhome as integer,",
-				"          Dt_Customer as date,",
+				"          Dt_Customer as string,",
 				"          Recency as integer,",
 				"          MntWines as integer,",
 				"          MntFruits as integer,",
